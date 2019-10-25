@@ -1,9 +1,15 @@
 package com.yb.cheung.config;
 
+import com.alibaba.fastjson.JSON;
+import com.yb.cheung.common.utils.Constant;
+import com.yb.cheung.common.utils.R;
+import com.yb.cheung.modules.sys.entity.SysUserEntity;
 import com.yb.cheung.modules.sys.oauth2.*;
+import com.yb.cheung.modules.sys.service.SysUserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,15 +21,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -34,8 +35,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     MyFilterInvocationSecurityMetadataSource myFilterInvocationSecurityMetadataSource;
     @Autowired
     MyAccessDecisionManager myAccessDecisionManager;
+
     @Autowired
-    AuthenticationAccessDeniedHandler authenticationAccessDeniedHandler;
+    SysUserTokenService sysUserTokenService;
+
 
     /**
      * 自定义的加密算法
@@ -52,12 +55,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/index.html", "/static/**","/loginPage","/register","/sys/login");
+        web.ignoring().antMatchers("/index.html", "/static/**","/loginPage","/register","/unlogin");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+        .antMatchers("/**").authenticated()
         .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
             @Override
             public <O extends FilterSecurityInterceptor> O postProcess(O o) {
@@ -68,35 +72,69 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         })
         .and()
         .formLogin()
-        .loginPage("/login")
-        //.loginProcessingUrl("/login").usernameParameter("username").passwordParameter("password").permitAll()
+        .loginPage("/unlogin")
+        .loginProcessingUrl("/login").usernameParameter("username").passwordParameter("password").permitAll()
+        //登录失败
         .failureHandler(
-            (HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e)->{
-                httpServletResponse.setContentType("application/json;charset=utf-8");
-                PrintWriter out = httpServletResponse.getWriter();
-                StringBuffer sb = new StringBuffer();
-                sb.append("{\"status\":\"error\",\"msg\":\"");
+            (HttpServletRequest request, HttpServletResponse response, AuthenticationException e)->{
+                response.setContentType("application/json;charset=utf-8");
+                PrintWriter out = response.getWriter();
+                R r = null;
                 if (e instanceof UsernameNotFoundException || e instanceof BadCredentialsException) {
-                    sb.append("用户名或密码输入错误，登录失败!");
+                    r = R.error("用户名或密码输入错误，登录失败!");
                 } else {
-                    sb.append("登录失败!");
+                    r = R.error("登录失败!");
                 }
-                sb.append("\"}");
-                out.write(sb.toString());
+                out.write(r.toJSONString());
                 out.flush();
                 out.close();
+                response.setStatus(Constant.UNLOGIN);
             }
         )
+        //成功登录
         .successHandler(
             (HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication)->{
                 httpServletResponse.setContentType("application/json;charset=utf-8");
                 PrintWriter out = httpServletResponse.getWriter();
-                String s = "{\"status\":\"success\",\"msg\":\"登陆成功\"}";
-                out.write(s);
+                out.write(R.ok("登录成功！").toJSONString());
                 out.flush();
                 out.close();
             }
-        ).and().logout().permitAll().and().csrf().disable().exceptionHandling().accessDeniedHandler(authenticationAccessDeniedHandler);
+        )
+        .and()
+        .logout()
+        .logoutUrl("/logout")
+        //退出处理
+        .logoutSuccessHandler((HttpServletRequest request, HttpServletResponse response, Authentication authentication)->{
+            if(null == authentication){
+                response.setContentType("application/json;charset=utf-8");
+                PrintWriter out = response.getWriter();
+                out.write(R.error("用户已经退出").toJSONString());
+                out.flush();
+                out.close();
+            } else {
+                response.setContentType("application/json;charset=utf-8");
+                PrintWriter out = response.getWriter();
+                out.write(R.error("退出成功").toJSONString());
+                out.flush();
+                out.close();
+            }
+        })
+        .permitAll()
+        .deleteCookies("JSESSIONID")
+        .and()
+        .csrf().disable()
+        .exceptionHandling()
+        //权限不足异常处理
+        .accessDeniedHandler((HttpServletRequest request, HttpServletResponse response, AccessDeniedException e)->{
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json;charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.write(R.unAccess().toJSONString());
+            out.flush();
+            out.close();
+            response.setStatus(Constant.UNACCESS);
+        });
     }
 
 

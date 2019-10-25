@@ -14,7 +14,48 @@ package com.yb.cheung.common.utils;
  * @author cheung pangfucheung@163.com
  */
 public class Constant {
-	/** 超级管理员ID */
+
+    /**
+     * 请求成功
+     */
+    public static final int SECCUSS = 200;
+    public static final String MSG_SECCUSS = "请求成功";
+
+    /**
+     * 程序异常
+     */
+    public static final int ERROR = 500;
+    public static final String MSG_ERROR = "程序发生异常，请联系管理员";
+
+    /**
+     * 未登录/登录超时
+     */
+    public static final int UNLOGIN = 402;
+    public static final String MSG_UNLOGIN = "未登录或者登录超时";
+
+    /**
+     * 没有权限
+     */
+    public  static final int UNACCESS = 201;
+    public static final String MSG_UNACCESS = "用户没有权限";
+
+    /**
+     * 状态名
+     */
+    public static final String CODE = "code";
+
+    /**
+     * 说明数据
+     */
+    public static final String MSG = "msg";
+
+    /**
+     * 返回数据
+     */
+    public static final String RESULT = "result";
+
+
+    /** 超级管理员ID */
 	public static final int SUPER_ADMIN = 1;
     /**
      * 当前页码

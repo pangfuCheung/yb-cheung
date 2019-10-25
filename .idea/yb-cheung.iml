@@ -157,11 +157,13 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:5.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-actuator:2.1.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.1.8.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-oauth2:unknown" level="project" />
     <orderEntry type="library" name="Maven: io.scalajs.npm:md5_sjs0.6_2.12:1.0.2-4" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.12.1" level="project" />
     <orderEntry type="library" name="Maven: io.scalajs:nodejs_sjs0.6_2.12:0.3.0.8" level="project" />
     <orderEntry type="library" name="Maven: io.scalajs:core_sjs0.6_2.12:0.3.0.8" level="project" />
     <orderEntry type="library" name="Maven: org.scala-js:scalajs-library_2.12:0.6.14" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-reflect:2.12.1" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-devtools:2.1.8.RELEASE" level="project" />
   </component>
 </module>

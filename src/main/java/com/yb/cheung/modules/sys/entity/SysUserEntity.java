@@ -95,12 +95,26 @@ public class SysUserEntity implements UserDetails{
 	/**
 	 * 菜单列表
 	 */
+	@TableField(exist=false)
 	private List<SysMenuEntity> menus;
 
 	/**
 	 * springsecurity
 	 */
+	@TableField(exist=false)
 	private List<GrantedAuthority> grantedAuthorities;
+
+	@TableField(exist=false)
+	private boolean accountNonExpired = true;
+
+	@TableField(exist=false)
+	private boolean accountNonLocked = true;
+
+	@TableField(exist=false)
+	private boolean credentialsNonExpired = true;
+
+	@TableField(exist=false)
+	private boolean enabled = true;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -109,22 +123,22 @@ public class SysUserEntity implements UserDetails{
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return false;
+		return accountNonExpired;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return false;
+		return accountNonLocked;
 	}
 
 	@Override
-	public boolean isCredentialsNonExpired() {
-		return false;
+	public boolean isCredentialsNonExpired(){
+		return credentialsNonExpired;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return false;
+		return enabled;
 	}
 
 }

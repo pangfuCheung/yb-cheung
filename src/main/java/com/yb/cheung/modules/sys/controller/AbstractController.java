@@ -8,6 +8,7 @@
 
 package com.yb.cheung.modules.sys.controller;
 
+import com.yb.cheung.common.utils.SecurityUtils;
 import com.yb.cheung.modules.sys.entity.SysUserEntity;
 
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ public abstract class AbstractController {
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	protected SysUserEntity getUser() {
-		return null; /*(SysUserEntity) SecurityUtils.getSubject().getPrincipal();*/
+		return (SysUserEntity) SecurityUtils.getUser();
 	}
 
 	protected Long getUserId() {

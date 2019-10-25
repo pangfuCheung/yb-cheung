@@ -4,8 +4,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,10 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
      *
      */
     @Override
-    public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
+    public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> configAttributes) throws BadCredentialsException, AccessDeniedException, InsufficientAuthenticationException {
+        if(authentication == null){
+            throw new BadCredentialsException("用户没有登录");
+        }
 
         if(null== configAttributes || configAttributes.size() <=0) {
             return;

@@ -1,0 +1,102 @@
+//分页查询
+{
+    "msg": "success",
+    "code": 200,
+    "result":[
+    	{
+            "userId": 1,
+            "username": "admin",
+            "password": "2633418210e50be956db2b54c1f5aab4be59befe45cea930e24132253b29edb7",
+            "salt": "i7LpbTWqDB0XWhV4WS/a"
+        },
+        {
+            "userId": 1,
+            "username": "admin",
+            "password": "2633418210e50be956db2b54c1f5aab4be59befe45cea930e24132253b29edb7",
+            "salt": "i7LpbTWqDB0XWhV4WS/a"
+        }
+    ],
+    "totalCount": 2,
+    "pageSize": 10,
+    "totalPage": 1,
+    "currPage": 1
+}
+//查询全部
+{
+    "msg": "success",
+    "code": 200,
+    "result":[
+    	{
+            "userId": 1,
+            "username": "admin",
+            "password": "2633418210e50be956db2b54c1f5aab4be59befe45cea930e24132253b29edb7",
+            "salt": "i7LpbTWqDB0XWhV4WS/a"
+        },
+        {
+            "userId": 1,
+            "username": "admin",
+            "password": "2633418210e50be956db2b54c1f5aab4be59befe45cea930e24132253b29edb7",
+            "salt": "i7LpbTWqDB0XWhV4WS/a"
+        }
+    ],
+    "totalCount": null,
+    "pageSize": null,
+    "totalPage": null,
+    "currPage": null
+}
+//查询单条
+{
+    "msg": "success",
+    "code": 200,
+    "result":[{
+        "userId": 1,
+        "username": "admin",
+        "password": "2633418210e50be956db2b54c1f5aab4be59befe45cea930e24132253b29edb7",
+        "salt": "i7LpbTWqDB0XWhV4WS/a"
+    }],
+    "totalCount": null,
+    "pageSize": null,
+    "totalPage": null,
+    "currPage": null
+}
+//请求成功
+{
+    "msg": "success",
+    "code": 200,
+    "result":[],
+    "totalCount": null,
+    "pageSize": null,
+    "totalPage": null,
+    "currPage": null
+}
+//用户状态的要改响应码
+//登录过期-未登录-402
+{
+    "msg": "success",
+    "code": 402,
+    "result":[],
+    "totalCount": null,
+    "pageSize": null,
+    "totalPage": null,
+    "currPage": null
+}
+//权限不足-201
+{
+    "msg": "success",
+    "code": 201,
+    "result":[],
+    "totalCount": null,
+    "pageSize": null,
+    "totalPage": null,
+    "currPage": null
+}
+//后端异常-500
+{
+    "msg": "error",
+    "code": 500,
+    "result":[],
+    "totalCount": null,
+    "pageSize": null,
+    "totalPage": null,
+    "currPage": null
+}

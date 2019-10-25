@@ -47,9 +47,7 @@ public class SysRoleController extends AbstractController {
 		if(getUserId() != Constant.SUPER_ADMIN){
 			params.put("createUserId", getUserId());
 		}
-
 		PageUtils page = sysRoleService.queryPage(params);
-
 		return R.ok().put("page", page);
 	}
 	
