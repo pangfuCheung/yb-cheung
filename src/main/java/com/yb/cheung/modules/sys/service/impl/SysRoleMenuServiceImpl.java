@@ -28,16 +28,16 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuDao, SysRoleM
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void saveOrUpdate(Long roleId, List<Long> menuIdList) {
+	public void saveOrUpdate(String roleId, List<String> menuIdList) {
 		//先删除角色与菜单关系
-		deleteBatch(new Long[]{roleId});
+		deleteBatch(new String[]{roleId});
 
 		if(menuIdList.size() == 0){
 			return ;
 		}
 
 		//保存角色与菜单关系
-		for(Long menuId : menuIdList){
+		for(String menuId : menuIdList){
 			SysRoleMenuEntity sysRoleMenuEntity = new SysRoleMenuEntity();
 			sysRoleMenuEntity.setMenuId(menuId);
 			sysRoleMenuEntity.setRoleId(roleId);
@@ -47,12 +47,12 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuDao, SysRoleM
 	}
 
 	@Override
-	public List<Long> queryMenuIdList(Long roleId) {
+	public List<String> queryMenuIdList(String roleId) {
 		return baseMapper.queryMenuIdList(roleId);
 	}
 
 	@Override
-	public int deleteBatch(Long[] roleIds){
+	public int deleteBatch(String[] roleIds){
 		return baseMapper.deleteBatch(roleIds);
 	}
 

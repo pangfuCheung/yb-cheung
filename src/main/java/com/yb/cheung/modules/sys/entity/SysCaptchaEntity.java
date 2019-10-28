@@ -25,10 +25,12 @@ import java.util.Date;
 public class SysCaptchaEntity {
     @TableId(type = IdType.INPUT)
     private String uuid;
+
     /**
      * 验证码
      */
     private String code;
+
     /**
      * 过期时间
      */

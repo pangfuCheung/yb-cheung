@@ -32,7 +32,12 @@ public class SysRoleEntity implements Serializable {
 	 * 角色ID
 	 */
 	@TableId
-	private Long roleId;
+	private String roleId;
+
+	/**
+	 * 角色code
+	 */
+	private String roleCode;
 
 	/**
 	 * 角色名称
@@ -48,15 +53,20 @@ public class SysRoleEntity implements Serializable {
 	/**
 	 * 创建者ID
 	 */
-	private Long createUserId;
+	private String createUserId;
 
 	@TableField(exist=false)
-	private List<Long> menuIdList;
+	private List<String> menuIdList;
 	
 	/**
 	 * 创建时间
 	 */
 	private Date createTime;
+
+	/**
+	 * 公司主键
+	 */
+	private String companyId;
 
 	
 }

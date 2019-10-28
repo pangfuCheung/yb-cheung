@@ -26,7 +26,7 @@ public class SysUserTokenServiceImpl extends ServiceImpl<SysUserTokenDao, SysUse
 
 
 	@Override
-	public R createToken(long userId) {
+	public R createToken(String userId) {
 		//生成一个token
 		String token = TokenGenerator.generateValue();
 
@@ -61,7 +61,7 @@ public class SysUserTokenServiceImpl extends ServiceImpl<SysUserTokenDao, SysUse
 	}
 
 	@Override
-	public void logout(long userId) {
+	public void logout(String userId) {
 		//生成一个token
 		String token = TokenGenerator.generateValue();
 

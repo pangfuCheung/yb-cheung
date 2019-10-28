@@ -21,6 +21,7 @@ import com.yb.cheung.modules.sys.entity.SysUserEntity;
 import com.yb.cheung.modules.sys.form.PasswordForm;
 import com.yb.cheung.modules.sys.service.SysUserRoleService;
 import com.yb.cheung.modules.sys.service.SysUserService;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.ArrayUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class SysUserController extends AbstractController {
 	//@RequiresPermissions("sys:user:list")
 	public R list(@RequestParam Map<String, Object> params){
 		//只有超级管理员，才能查看所有管理员列表
-		if(getUserId() != Constant.SUPER_ADMIN){
+		if(!"admin".equals(getUserId())){
 			params.put("createUserId", getUserId());
 		}
 		PageUtils page = sysUserService.queryPage(params);
@@ -61,6 +62,7 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 获取登录的用户信息
 	 */
+	@ApiOperation(value = "获取登录的用户信息",httpMethod = "GET")
 	@GetMapping("/info")
 	public R info(){
 		return R.ok().put("user", getUser());
@@ -93,13 +95,15 @@ public class SysUserController extends AbstractController {
 	 */
 	@GetMapping("/info/{userId}")
 	//@RequiresPermissions("sys:user:info")
-	public R info(@PathVariable("userId") Long userId){
+	public R info(@PathVariable("userId") String userId){
 		SysUserEntity user = sysUserService.getById(userId);
-		
-		//获取用户所属的角色列表
-		List<Long> roleIdList = sysUserRoleService.queryRoleIdList(userId);
-		user.setRoleIdList(roleIdList);
-		
+
+		if (user != null){
+			//获取用户所属的角色列表
+			List<String> roleIdList = sysUserRoleService.queryRoleIdList(userId);
+			user.setRoleIdList(roleIdList);
+		}
+
 		return R.ok().put("user", user);
 	}
 	
@@ -139,7 +143,7 @@ public class SysUserController extends AbstractController {
 	@SysLog("删除用户")
 	@PostMapping("/delete")
 	//@RequiresPermissions("sys:user:delete")
-	public R delete(@RequestBody Long[] userIds){
+	public R delete(@RequestBody String[] userIds){
 		if(ArrayUtils.contains(userIds, 1L)){
 			return R.error("系统管理员不能删除");
 		}

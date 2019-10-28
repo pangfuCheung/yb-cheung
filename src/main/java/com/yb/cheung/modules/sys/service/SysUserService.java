@@ -10,6 +10,7 @@ package com.yb.cheung.modules.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yb.cheung.common.utils.PageUtils;
+import com.yb.cheung.modules.sys.entity.SysMenuEntity;
 import com.yb.cheung.modules.sys.entity.SysUserEntity;
 
 import java.util.List;
@@ -29,12 +30,12 @@ public interface SysUserService extends IService<SysUserEntity> {
 	 * 查询用户的所有权限
 	 * @param userId  用户ID
 	 */
-	List<String> queryAllPerms(Long userId);
+	List<String> queryAllPerms(String userId);
 	
 	/**
 	 * 查询用户的所有菜单ID
 	 */
-	List<Long> queryAllMenuId(Long userId);
+	List<String> queryAllMenuId(String userId);
 
 	/**
 	 * 根据用户名，查询系统用户
@@ -54,7 +55,7 @@ public interface SysUserService extends IService<SysUserEntity> {
 	/**
 	 * 删除用户
 	 */
-	void deleteBatch(Long[] userIds);
+	void deleteBatch(String[] userIds);
 
 	/**
 	 * 修改密码
@@ -62,5 +63,20 @@ public interface SysUserService extends IService<SysUserEntity> {
 	 * @param password     原密码
 	 * @param newPassword  新密码
 	 */
-	boolean updatePassword(Long userId, String password, String newPassword);
+	boolean updatePassword(String userId, String password, String newPassword);
+
+
+	/**
+	 * 判断是否拥有管理员权限
+	 */
+	boolean isAdmin(String userId);
+
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	SysUserEntity userLoginInit(String userId);
+
 }

@@ -39,7 +39,7 @@ public class SysUserEntity implements UserDetails{
 	 * 用户ID
 	 */
 	@TableId
-	private Long userId;
+	private String userId;
 
 	/**
 	 * 用户名
@@ -79,17 +79,22 @@ public class SysUserEntity implements UserDetails{
 	 * 角色ID列表
 	 */
 	@TableField(exist=false)
-	private List<Long> roleIdList;
+	private List<String> roleIdList;
 
 	/**
 	 * 创建者ID
 	 */
-	private Long createUserId;
+	private String createUserId;
 
 	/**
 	 * 创建时间
 	 */
 	private Date createTime;
+
+	/**
+	 * 公司主键
+	 */
+	private String companyId;
 
 
 	/**
@@ -97,6 +102,20 @@ public class SysUserEntity implements UserDetails{
 	 */
 	@TableField(exist=false)
 	private List<SysMenuEntity> menus;
+
+	/**
+	 * 菜单列表
+	 */
+	@TableField(exist=false)
+	private List<SysMenuEntity> permList;
+
+	/**
+	 * 角色列表
+	 */
+	@TableField(exist=false)
+	private List<SysRoleEntity> roles;
+
+
 
 	/**
 	 * springsecurity

@@ -29,11 +29,19 @@ public interface SysRoleService extends IService<SysRoleEntity> {
 
 	void update(SysRoleEntity role);
 
-	void deleteBatch(Long[] roleIds);
+	void deleteBatch(String[] roleIds);
 
 	
 	/**
 	 * 查询用户创建的角色ID列表
 	 */
-	List<Long> queryRoleIdList(Long createUserId);
+	List<String> queryRoleIdList(String createUserId);
+
+	/**
+	 * 根据用户id和用户公司主键查询用户的角色信息
+	 * @param userId
+	 * @param companyId
+	 * @return
+	 */
+	List<SysRoleEntity> getUserRolesByUserIdAndCompanyId(String userId,String companyId);
 }

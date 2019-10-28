@@ -29,7 +29,7 @@ public class SysUserTokenEntity implements Serializable {
 	
 	//用户ID
 	@TableId(type = IdType.INPUT)
-	private Long userId;
+	private String userId;
 	//token
 	private String token;
 	//过期时间

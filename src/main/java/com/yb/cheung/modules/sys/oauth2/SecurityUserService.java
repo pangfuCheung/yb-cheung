@@ -40,8 +40,9 @@ public class SecurityUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysUserEntity user = sysUserService.queryByUserName(username);
-        if (user != null) {
+        SysUserEntity sysUserEntity = sysUserService.queryByUserName(username);
+        if (sysUserEntity != null) {
+            SysUserEntity user = sysUserService.userLoginInit(sysUserEntity.getUserId());
             List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
             QueryWrapper queryWrapper = new QueryWrapper<SysMenuEntity>().eq("user_id",user.getUserId());
             List<SysUserRoleEntity> userRoleEntities = sysUserRoleService.list(queryWrapper);

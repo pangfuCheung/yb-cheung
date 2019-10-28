@@ -17,7 +17,11 @@ import com.yb.cheung.common.utils.PageUtils;
 import com.yb.cheung.common.utils.Query;
 import com.yb.cheung.common.utils.Sha256Hash;
 import com.yb.cheung.modules.sys.dao.SysUserDao;
+import com.yb.cheung.modules.sys.entity.SysMenuEntity;
+import com.yb.cheung.modules.sys.entity.SysRoleEntity;
 import com.yb.cheung.modules.sys.entity.SysUserEntity;
+import com.yb.cheung.modules.sys.entity.SysUserRoleEntity;
+import com.yb.cheung.modules.sys.service.SysMenuService;
 import com.yb.cheung.modules.sys.service.SysRoleService;
 import com.yb.cheung.modules.sys.service.SysUserRoleService;
 import com.yb.cheung.modules.sys.service.SysUserService;
@@ -44,11 +48,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 	private SysUserRoleService sysUserRoleService;
 	@Autowired
 	private SysRoleService sysRoleService;
+	@Autowired
+	private SysMenuService sysMenuService;
+
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
 		String username = (String)params.get("username");
-		Long createUserId = (Long)params.get("createUserId");
+		String createUserId = (String)params.get("createUserId");
 
 		IPage<SysUserEntity> page = this.page(
 			new Query<SysUserEntity>().getPage(params),
@@ -61,12 +68,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 	}
 
 	@Override
-	public List<String> queryAllPerms(Long userId) {
+	public List<String> queryAllPerms(String userId) {
 		return baseMapper.queryAllPerms(userId);
 	}
 
 	@Override
-	public List<Long> queryAllMenuId(Long userId) {
+	public List<String> queryAllMenuId(String userId) {
 		return baseMapper.queryAllMenuId(userId);
 	}
 
@@ -110,12 +117,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 	}
 
 	@Override
-	public void deleteBatch(Long[] userId) {
+	public void deleteBatch(String[] userId) {
 		this.removeByIds(Arrays.asList(userId));
 	}
 
 	@Override
-	public boolean updatePassword(Long userId, String password, String newPassword) {
+	public boolean updatePassword(String userId, String password, String newPassword) {
 		SysUserEntity userEntity = new SysUserEntity();
 		userEntity.setPassword(newPassword);
 		return this.update(userEntity,
@@ -130,16 +137,49 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 			return;
 		}
 		//如果不是超级管理员，则需要判断用户的角色是否自己创建
-		if(user.getCreateUserId() == Constant.SUPER_ADMIN){
+		if(!"admin".equals(user.getCreateUserId())){
 			return ;
 		}
 		
 		//查询用户创建的角色列表
-		List<Long> roleIdList = sysRoleService.queryRoleIdList(user.getCreateUserId());
+		List<String> roleIdList = sysRoleService.queryRoleIdList(user.getCreateUserId());
 
 		//判断是否越权
 		if(!roleIdList.containsAll(user.getRoleIdList())){
 			throw new RRException("新增用户所选角色，不是本人创建");
 		}
 	}
+
+	/**
+	 * 判断是否拥有管理员权限
+	 */
+	public boolean isAdmin(String userId){
+		QueryWrapper<SysUserRoleEntity> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq("user_id",userId);
+		boolean isTrue = false;
+		List<SysUserRoleEntity> userRoles =  sysUserRoleService.list(queryWrapper);
+		for (SysUserRoleEntity userRole:userRoles){
+			SysRoleEntity sysRoleEntity = sysRoleService.getById(userRole.getRoleId());
+			if("admin".equals(sysRoleEntity.getRoleCode())){
+				isTrue = true;
+			}
+		}
+		return isTrue;
+	}
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	public SysUserEntity userLoginInit(String userId){
+		//拿到用户的菜单权限
+		SysUserEntity user = baseMapper.selectById(userId);
+		String companyId = user.getCompanyId();
+		user.setMenus(sysMenuService.getUserMenusByUserIdAndCompanyId(userId,companyId));
+		user.setRoles(sysRoleService.getUserRolesByUserIdAndCompanyId(userId,companyId));
+		user.setPermList(sysMenuService.getUserPermsByUserIdAndCompanyId(userId,companyId));
+		return user;
+	}
+
 }

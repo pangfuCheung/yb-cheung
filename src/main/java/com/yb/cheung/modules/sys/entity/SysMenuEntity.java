@@ -30,12 +30,12 @@ public class SysMenuEntity implements Serializable {
 	 * 菜单ID
 	 */
 	@TableId
-	private Long menuId;
+	private String menuId;
 
 	/**
 	 * 父菜单ID，一级菜单为0
 	 */
-	private Long parentId;
+	private String parentId;
 	
 	/**
 	 * 父菜单名称
@@ -72,6 +72,11 @@ public class SysMenuEntity implements Serializable {
 	 * 排序
 	 */
 	private Integer orderNum;
+
+	/**
+	 * 公司主键
+	 */
+	private String companyId;
 	
 	/**
 	 * ztree属性
@@ -81,5 +86,11 @@ public class SysMenuEntity implements Serializable {
 
 	@TableField(exist=false)
 	private List<?> list;
+
+	@TableField(exist=false)
+	private List<SysMenuEntity> menus;
+
+	@TableField(exist=false)
+	private List<SysMenuEntity> permList;
 
 }

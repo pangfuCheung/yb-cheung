@@ -38,9 +38,10 @@ public class SysMenuController extends AbstractController {
 	 */
 	@GetMapping("/nav")
 	public R nav(){
-		List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(getUserId());
+		List<SysMenuEntity> menuList = getUser().getMenus();
 		//Set<String> permissions = shiroService.getUserPermissions(getUserId());
-		Set<String> permissions = null;
+		//Set<String> permissions = getUser().getPermList();
+		List<SysMenuEntity> permissions = getUser().getPermList();
 		return R.ok().put("menuList", menuList).put("permissions", permissions);
 	}
 	
@@ -72,9 +73,9 @@ public class SysMenuController extends AbstractController {
 		
 		//添加顶级菜单
 		SysMenuEntity root = new SysMenuEntity();
-		root.setMenuId(0L);
+		root.setMenuId("0");
 		root.setName("一级菜单");
-		root.setParentId(-1L);
+		root.setParentId("-1");
 		root.setOpen(true);
 		menuList.add(root);
 		
@@ -127,10 +128,10 @@ public class SysMenuController extends AbstractController {
 	@SysLog("删除菜单")
 	@PostMapping("/delete/{menuId}")
 	//@RequiresPermissions("sys:menu:delete")
-	public R delete(@PathVariable("menuId") long menuId){
-		if(menuId <= 31){
+	public R delete(@PathVariable("menuId") String menuId){
+		/*if(menuId <= 31){
 			return R.error("系统菜单，不能删除");
-		}
+		}*/
 
 		//判断是否有子菜单或按钮
 		List<SysMenuEntity> menuList = sysMenuService.queryListParentId(menuId);
@@ -164,7 +165,7 @@ public class SysMenuController extends AbstractController {
 		
 		//上级菜单类型
 		int parentType = Constant.MenuType.CATALOG.getValue();
-		if(menu.getParentId() != 0){
+		if("0".equals(menu.getParentId())){
 			SysMenuEntity parentMenu = sysMenuService.getById(menu.getParentId());
 			parentType = parentMenu.getType();
 		}

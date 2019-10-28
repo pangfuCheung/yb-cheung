@@ -1,5 +1,6 @@
 package com.yb.cheung.modules.sys.oauth2;
 
+import io.swagger.annotations.Api;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;

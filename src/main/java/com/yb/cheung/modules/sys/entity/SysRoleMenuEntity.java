@@ -25,16 +25,17 @@ public class SysRoleMenuEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@TableId
-	private Long id;
+	private String id;
 
 	/**
 	 * 角色ID
 	 */
-	private Long roleId;
+	private String roleId;
 
 	/**
 	 * 菜单ID
 	 */
-	private Long menuId;
+	private String menuId;
+
 	
 }
