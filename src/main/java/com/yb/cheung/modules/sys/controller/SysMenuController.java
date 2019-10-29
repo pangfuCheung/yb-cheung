@@ -14,6 +14,10 @@ import com.yb.cheung.common.utils.Constant;
 import com.yb.cheung.common.utils.R;
 import com.yb.cheung.modules.sys.entity.SysMenuEntity;
 import com.yb.cheung.modules.sys.service.SysMenuService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +30,17 @@ import java.util.Set;
  *
  * @author cheung pangfucheung@163.com
  */
+@Api(description = "系统菜单")
 @RestController
 @RequestMapping("/sys/menu")
 public class SysMenuController extends AbstractController {
 	@Autowired
 	private SysMenuService sysMenuService;
 
-
 	/**
 	 * 导航菜单
 	 */
+	@ApiOperation(value = "导航菜单",httpMethod = "GET")
 	@GetMapping("/nav")
 	public R nav(){
 		List<SysMenuEntity> menuList = getUser().getMenus();
@@ -48,8 +53,8 @@ public class SysMenuController extends AbstractController {
 	/**
 	 * 所有菜单列表
 	 */
+	@ApiOperation(value = "所有菜单列表",httpMethod = "GET")
 	@GetMapping("/list")
-	//@RequiresPermissions("sys:menu:list")
 	public List<SysMenuEntity> list(){
 		List<SysMenuEntity> menuList = sysMenuService.list();
 		for(SysMenuEntity sysMenuEntity : menuList){
@@ -65,8 +70,8 @@ public class SysMenuController extends AbstractController {
 	/**
 	 * 选择菜单(添加、修改菜单)
 	 */
+	@ApiOperation(value = "选择菜单(添加、修改菜单)",httpMethod = "GET")
 	@GetMapping("/select")
-	//@RequiresPermissions("sys:menu:select")
 	public R select(){
 		//查询列表数据
 		List<SysMenuEntity> menuList = sysMenuService.queryNotButtonList();
@@ -85,9 +90,12 @@ public class SysMenuController extends AbstractController {
 	/**
 	 * 菜单信息
 	 */
+	@ApiOperation(value = "根据menuId菜单信息",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "menuId",value = "角色id" ,required = true , dataType = "String" ,paramType = "path")
+	})
 	@GetMapping("/info/{menuId}")
-	//@RequiresPermissions("sys:menu:info")
-	public R info(@PathVariable("menuId") Long menuId){
+	public R info(@PathVariable("menuId") String menuId){
 		SysMenuEntity menu = sysMenuService.getById(menuId);
 		return R.ok().put("menu", menu);
 	}
@@ -95,9 +103,12 @@ public class SysMenuController extends AbstractController {
 	/**
 	 * 保存
 	 */
+	@ApiOperation(value = "保存菜单",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "menu",value = "菜单实体类" ,required = true , dataType = "SysMenuEntity" ,paramType = "body")
+	})
 	@SysLog("保存菜单")
 	@PostMapping("/save")
-	//@RequiresPermissions("sys:menu:save")
 	public R save(@RequestBody SysMenuEntity menu){
 		//数据校验
 		verifyForm(menu);
@@ -110,9 +121,12 @@ public class SysMenuController extends AbstractController {
 	/**
 	 * 修改
 	 */
+	@ApiOperation(value = "修改菜单",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "menu",value = "菜单实体类" ,required = true , dataType = "SysMenuEntity" ,paramType = "body")
+	})
 	@SysLog("修改菜单")
 	@PostMapping("/update")
-	//@RequiresPermissions("sys:menu:update")
 	public R update(@RequestBody SysMenuEntity menu){
 		//数据校验
 		verifyForm(menu);
@@ -125,22 +139,19 @@ public class SysMenuController extends AbstractController {
 	/**
 	 * 删除
 	 */
+	@ApiOperation(value = "删除菜单",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "menu",value = "菜单实体类" ,required = true , dataType = "SysMenuEntity" ,paramType = "body")
+	})
 	@SysLog("删除菜单")
 	@PostMapping("/delete/{menuId}")
-	//@RequiresPermissions("sys:menu:delete")
 	public R delete(@PathVariable("menuId") String menuId){
-		/*if(menuId <= 31){
-			return R.error("系统菜单，不能删除");
-		}*/
-
 		//判断是否有子菜单或按钮
 		List<SysMenuEntity> menuList = sysMenuService.queryListParentId(menuId);
 		if(menuList.size() > 0){
 			return R.error("请先删除子菜单或按钮");
 		}
-
 		sysMenuService.delete(menuId);
-
 		return R.ok();
 	}
 	

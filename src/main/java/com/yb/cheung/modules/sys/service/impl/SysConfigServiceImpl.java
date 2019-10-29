@@ -68,8 +68,8 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfigEnt
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteBatch(Long[] ids) {
-		for(Long id : ids){
+	public void deleteBatch(String[] ids) {
+		for(String id : ids){
 			SysConfigEntity config = this.getById(id);
 			sysConfigRedis.delete(config.getParamKey());
 		}

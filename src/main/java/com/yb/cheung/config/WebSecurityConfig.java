@@ -5,9 +5,7 @@ import com.yb.cheung.common.utils.Constant;
 import com.yb.cheung.common.utils.R;
 import com.yb.cheung.modules.sys.entity.SysUserEntity;
 import com.yb.cheung.modules.sys.oauth2.*;
-import com.yb.cheung.modules.sys.service.SysCaptchaService;
-import com.yb.cheung.modules.sys.service.SysUserService;
-import com.yb.cheung.modules.sys.service.SysUserTokenService;
+import com.yb.cheung.modules.sys.service.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,13 +33,22 @@ import java.util.HashMap;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    private SysUserService sysUserService;
+
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
+
+    @Autowired
+    private SysRoleService sysRoleService;
+
+    @Autowired
     SecurityUserService userService;
+
     @Autowired
     MyFilterInvocationSecurityMetadataSource myFilterInvocationSecurityMetadataSource;
+
     @Autowired
     MyAccessDecisionManager myAccessDecisionManager;
-    @Autowired
-    private SysUserService sysUserService;
 
     @Autowired
     SysUserTokenService sysUserTokenService;
@@ -60,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(myPasswordEncoder());
+        auth.userDetailsService(new SecurityUserService(sysUserService,sysUserRoleService,sysRoleService)).passwordEncoder(myPasswordEncoder());
     }
 
     @Override

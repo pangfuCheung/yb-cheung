@@ -41,7 +41,7 @@ public interface SysConfigService extends IService<SysConfigEntity> {
 	/**
 	 * 删除配置信息
 	 */
-	public void deleteBatch(Long[] ids);
+	public void deleteBatch(String[] ids);
 	
 	/**
 	 * 根据key，获取配置的value值

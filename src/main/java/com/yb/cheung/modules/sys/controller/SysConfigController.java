@@ -16,6 +16,9 @@ import com.yb.cheung.common.validator.ValidatorUtils;
 import com.yb.cheung.modules.sys.entity.SysConfigEntity;
 import com.yb.cheung.modules.sys.service.SysConfigService;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,21 +38,26 @@ public class SysConfigController extends AbstractController {
 	/**
 	 * 所有配置列表
 	 */
+	@ApiOperation(value = "所有配置列表",httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "params",value = "查询条件" ,required = true , dataType = "map" ,paramType = "query")
+	})
 	@GetMapping("/list")
-	//@RequiresPermissions("sys:config:list")
 	public R list(@RequestParam Map<String, Object> params){
 		PageUtils page = sysConfigService.queryPage(params);
 
 		return R.ok().put("page", page);
 	}
-	
-	
+
 	/**
 	 * 配置信息
 	 */
+	@ApiOperation(value = "根据id配置信息",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "id",value = "配置信息id" ,required = true , dataType = "String" ,paramType = "path")
+	})
 	@GetMapping("/info/{id}")
-	//@RequiresPermissions("sys:config:info")
-	public R info(@PathVariable("id") Long id){
+	public R info(@PathVariable("id") String id){
 		SysConfigEntity config = sysConfigService.getById(id);
 		
 		return R.ok().put("config", config);
@@ -58,9 +66,12 @@ public class SysConfigController extends AbstractController {
 	/**
 	 * 保存配置
 	 */
+	@ApiOperation(value = "保存配置",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "role",value = "配置实体类" ,required = true , dataType = "SysConfigEntity" ,paramType = "body")
+	})
 	@SysLog("保存配置")
 	@PostMapping("/save")
-	//@RequiresPermissions("sys:config:save")
 	public R save(@RequestBody SysConfigEntity config){
 		ValidatorUtils.validateEntity(config);
 
@@ -72,9 +83,12 @@ public class SysConfigController extends AbstractController {
 	/**
 	 * 修改配置
 	 */
+	@ApiOperation(value = "修改配置",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "role",value = "配置实体类" ,required = true , dataType = "SysRoleEntity" ,paramType = "body")
+	})
 	@SysLog("修改配置")
 	@PostMapping("/update")
-	//@RequiresPermissions("sys:config:update")
 	public R update(@RequestBody SysConfigEntity config){
 		ValidatorUtils.validateEntity(config);
 		
@@ -86,12 +100,14 @@ public class SysConfigController extends AbstractController {
 	/**
 	 * 删除配置
 	 */
+	@ApiOperation(value = "删除配置",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "ids",value = "用户实体类" ,required = true , dataType = "String[]" ,paramType = "body")
+	})
 	@SysLog("删除配置")
 	@PostMapping("/delete")
-	//@RequiresPermissions("sys:config:delete")
-	public R delete(@RequestBody Long[] ids){
+	public R delete(@RequestBody String[] ids){
 		sysConfigService.deleteBatch(ids);
-		
 		return R.ok();
 	}
 

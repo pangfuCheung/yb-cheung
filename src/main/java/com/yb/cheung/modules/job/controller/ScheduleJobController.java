@@ -15,6 +15,7 @@ import com.yb.cheung.common.validator.ValidatorUtils;
 import com.yb.cheung.modules.job.entity.ScheduleJobEntity;
 import com.yb.cheung.modules.job.service.ScheduleJobService;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

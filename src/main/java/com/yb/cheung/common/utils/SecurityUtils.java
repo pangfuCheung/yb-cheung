@@ -3,7 +3,6 @@ package com.yb.cheung.common.utils;
 import com.yb.cheung.common.exception.RRException;
 import com.yb.cheung.modules.sys.entity.SysUserEntity;
 import com.yb.cheung.modules.sys.service.SysRoleService;
-import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

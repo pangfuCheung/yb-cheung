@@ -45,6 +45,7 @@ public class SysCompanyController extends AbstractController {
     /**
      * 列表
      */
+    @ApiOperation(value = "获取全部公司",httpMethod = "POST")
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = sysCompanyService.queryPage(params);
@@ -75,6 +76,10 @@ public class SysCompanyController extends AbstractController {
     /**
      * 保存
      */
+    @ApiOperation(value = "保存",httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "sysCompany",value = "公司实体类" ,required = true , dataType = "SysCompanyEntity" ,paramType = "body")
+    })
     @RequestMapping("/save")
     public R save(@RequestBody SysCompanyEntity sysCompany){
         if(verify(sysCompany)){
@@ -88,6 +93,10 @@ public class SysCompanyController extends AbstractController {
     /**
      * 修改
      */
+    @ApiOperation(value = "修改",httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "sysCompany",value = "公司实体类" ,required = true , dataType = "SysCompanyEntity" ,paramType = "body")
+    })
     @RequestMapping("/update")
     public R update(@RequestBody SysCompanyEntity sysCompany){
 		sysCompanyService.updateById(sysCompany);
@@ -97,6 +106,10 @@ public class SysCompanyController extends AbstractController {
     /**
      * 删除
      */
+    @ApiOperation(value = "删除",httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "companyIds",value = "被删除公司id的字符串数组" ,required = true , dataType = "字符串数组" ,paramType = "body")
+    })
     @RequestMapping("/delete")
     public R delete(@RequestBody String[] companyIds){
 		sysCompanyService.removeByIds(Arrays.asList(companyIds));

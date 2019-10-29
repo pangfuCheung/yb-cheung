@@ -21,6 +21,9 @@ import com.yb.cheung.modules.sys.entity.SysUserEntity;
 import com.yb.cheung.modules.sys.form.PasswordForm;
 import com.yb.cheung.modules.sys.service.SysUserRoleService;
 import com.yb.cheung.modules.sys.service.SysUserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.ArrayUtils;
 
@@ -35,6 +38,7 @@ import java.util.Map;
  *
  * @author cheung pangfucheung@163.com
  */
+@Api(description = "系统用户")
 @RestController
 @RequestMapping("/sys/user")
 public class SysUserController extends AbstractController {
@@ -47,8 +51,11 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 所有用户列表
 	 */
+	@ApiOperation(value = "所有用户列表",httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "params",value = "查询条件" ,required = true , dataType = "map" ,paramType = "query")
+	})
 	@GetMapping("/list")
-	//@RequiresPermissions("sys:user:list")
 	public R list(@RequestParam Map<String, Object> params){
 		//只有超级管理员，才能查看所有管理员列表
 		if(!"admin".equals(getUserId())){
@@ -63,6 +70,9 @@ public class SysUserController extends AbstractController {
 	 * 获取登录的用户信息
 	 */
 	@ApiOperation(value = "获取登录的用户信息",httpMethod = "GET")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "companyId",value = "公司id" ,required = true , dataType = "String" ,paramType = "path")
+	})
 	@GetMapping("/info")
 	public R info(){
 		return R.ok().put("user", getUser());
@@ -71,6 +81,10 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 修改登录用户密码
 	 */
+	@ApiOperation(value = "修改登录用户密码",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "form",value = "保存新旧密码的表单" ,required = true , dataType = "PasswordForm" ,paramType = "body")
+	})
 	@SysLog("修改密码")
 	@PostMapping("/password")
 	public R password(@RequestBody PasswordForm form){
@@ -93,8 +107,11 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 用户信息
 	 */
+	@ApiOperation(value = "根据userId获取用户信息",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId",value = "用户id" ,required = true , dataType = "String" ,paramType = "path")
+	})
 	@GetMapping("/info/{userId}")
-	//@RequiresPermissions("sys:user:info")
 	public R info(@PathVariable("userId") String userId){
 		SysUserEntity user = sysUserService.getById(userId);
 
@@ -110,9 +127,12 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 保存用户
 	 */
+	@ApiOperation(value = "保存用户",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "user",value = "用户实体类" ,required = true , dataType = "SysUserEntity" ,paramType = "body")
+	})
 	@SysLog("保存用户")
 	@PostMapping("/save")
-	//@RequiresPermissions("sys:user:save")
 	public R save(@RequestBody SysUserEntity user){
 		ValidatorUtils.validateEntity(user, AddGroup.class);
 		
@@ -125,9 +145,12 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 修改用户
 	 */
+	@ApiOperation(value = "修改用户",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "user",value = "用户实体类" ,required = true , dataType = "SysUserEntity" ,paramType = "body")
+	})
 	@SysLog("修改用户")
 	@PostMapping("/update")
-	//@RequiresPermissions("sys:user:update")
 	public R update(@RequestBody SysUserEntity user){
 		ValidatorUtils.validateEntity(user, UpdateGroup.class);
 
@@ -140,9 +163,12 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 删除用户
 	 */
+	@ApiOperation(value = "删除用户",httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "user",value = "用户实体类" ,required = true , dataType = "String[]" ,paramType = "body")
+	})
 	@SysLog("删除用户")
 	@PostMapping("/delete")
-	//@RequiresPermissions("sys:user:delete")
 	public R delete(@RequestBody String[] userIds){
 		if(ArrayUtils.contains(userIds, 1L)){
 			return R.error("系统管理员不能删除");
